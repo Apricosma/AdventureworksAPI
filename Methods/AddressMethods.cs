@@ -61,7 +61,7 @@ namespace AdventureworksAPI.Methods
         {
             Address address = db.Addresses.Find(id);
 
-            if (id == null)
+            if (address == null)
             {
                 return Results.BadRequest($"Address of {id} was not found");
             }
