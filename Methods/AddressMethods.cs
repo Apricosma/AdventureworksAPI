@@ -1,5 +1,8 @@
 ﻿using AdventureworksAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AdventureworksAPI.Methods
 {
@@ -70,6 +73,33 @@ namespace AdventureworksAPI.Methods
             db.SaveChanges();
 
             return Results.Ok($"Address of {id} was deleted successfully");
+        }
+
+        public static IResult AddressDetails(AdventureWorksLt2019Context db, int id)
+        {
+            List<Address> address = db.Addresses
+            .Where(a => a.AddressId == id)
+            .Include(a => a.CustomerAddresses)
+                .ThenInclude(ca => ca.Customer)
+            .ToList();
+
+            if (address.Count == 0)
+            {
+                return Results.NotFound($"Address of {id} was not found");
+            }
+
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve,
+                MaxDepth = 0
+            };
+
+            // serialize and deserialize with reference handler
+            // only solution I found to prevent a depth error
+            string jsonResult = JsonSerializer.Serialize(address, options);
+            Object jsonObject = JsonSerializer.Deserialize<object>(jsonResult);
+
+            return Results.Ok(jsonObject);
         }
 
     }
