@@ -10,10 +10,11 @@ builder.Services.AddDbContext<AdventureWorksLt2019Context>(options =>
 
 var app = builder.Build();
 
+// *** ADDRESS ENDPOINTS ***
 app.MapGet("/address", AddressMethods.GetAddresses);
 app.MapGet("/address/{id:int}", AddressMethods.GetAddressById);
 app.MapPost("/address/create", AddressMethods.CreateAddress);
 app.MapPut("/address/update/{id:int}", AddressMethods.UpdateAddress);
-
+app.MapDelete("/address/delete/{id:int}", AddressMethods.DeleteAddress);
 
 app.Run();

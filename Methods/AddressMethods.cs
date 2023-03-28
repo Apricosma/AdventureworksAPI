@@ -57,5 +57,20 @@ namespace AdventureworksAPI.Methods
             return Results.Ok(selectedAddress);
         }
 
+        public static IResult DeleteAddress(AdventureWorksLt2019Context db, int id)
+        {
+            Address address = db.Addresses.Find(id);
+
+            if (id == null)
+            {
+                return Results.BadRequest($"Address of {id} was not found");
+            }
+
+            db.Addresses.Remove(address);
+            db.SaveChanges();
+
+            return Results.Ok($"Address of {id} was deleted successfully");
+        }
+
     }
 }
