@@ -83,9 +83,9 @@ namespace AdventureworksAPI.Methods
                 .ThenInclude(ca => ca.Customer)
             .ToList();
 
-            if (address == null)
+            if (address.Count == 0)
             {
-                return Results.NotFound("Address of {id} was not found");
+                return Results.NotFound($"Address of {id} was not found");
             }
 
             JsonSerializerOptions options = new JsonSerializerOptions
