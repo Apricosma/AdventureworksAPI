@@ -13,6 +13,7 @@ var app = builder.Build();
 app.MapGet("/address", AddressMethods.GetAddresses);
 app.MapGet("/address/{id:int}", AddressMethods.GetAddressById);
 app.MapPost("/address/create", AddressMethods.CreateAddress);
+app.MapPut("/address/update/{id:int}", AddressMethods.UpdateAddress);
 
 
 app.Run();
