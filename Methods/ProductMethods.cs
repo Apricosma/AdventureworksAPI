@@ -83,6 +83,11 @@ namespace AdventureworksAPI.Methods
                 return Results.BadRequest($"Product {product.Name} was not found");
             }
 
+            List<SalesOrderDetail> details = db.SalesOrderDetails
+                .Where(sod => sod.ProductId == productId)
+                .ToList();
+
+            db.SalesOrderDetails.RemoveRange(details);
             db.Products.Remove(product);
             db.SaveChanges();
 

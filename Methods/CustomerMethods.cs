@@ -110,38 +110,6 @@ namespace AdventureworksAPI.Methods
 
         }
 
-        public static IResult AddingCustomer(AdventureWorksLt2019Context db, int CustomerID, int AddressId)
-        {
-            Customer Customer = db.Customers.Find(CustomerID);
-            Address Address = db.Addresses.Find(AddressId);
-            if (Customer == null || Address == null)
-            {
-                return Results.NotFound("There is no Customer or Address linked with the provided id's");
-
-            }
-
-            CustomerAddress ExistingCA = db.CustomerAddresses.FirstOrDefault(ca => ca.CustomerId == CustomerID && ca.AddressId == AddressId);
-
-            if (ExistingCA == null)
-            {
-                CustomerAddress customerAddress = new CustomerAddress();
-                customerAddress.CustomerId = CustomerID;
-                customerAddress.AddressId = AddressId;
-                customerAddress.Address = Address;
-                customerAddress.Customer = Customer;
-                customerAddress.AddressType = "Main Office";
-                customerAddress.ModifiedDate = DateTime.Now;
-                Guid guid = Guid.NewGuid();
-                customerAddress.Rowguid = guid;
-
-                db.Add(customerAddress);
-                db.SaveChanges();
-                return Results.Ok($"Customer with id {CustomerID} and Address with id {AddressId} is added to {customerAddress}");
-            }
-            return Results.Ok($"Customer with id {CustomerID} and Address with id {AddressId} is already living on this Address");
-        }
-
-
         public static IResult AddCustomerToAddress(AdventureWorksLt2019Context db, JsonElement json)
         {
             int customerId = json.GetProperty("customerId").GetInt32();
