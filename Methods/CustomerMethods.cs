@@ -30,10 +30,6 @@ namespace AdventureworksAPI.Methods
             {
                 Customer = db.Customers.ToList()
             });
-
-
-
-
         }
 
         public static IResult CreateCustomer(AdventureWorksLt2019Context db, Customer customer)
@@ -46,9 +42,20 @@ namespace AdventureworksAPI.Methods
         public static IResult DeleteCustomer(AdventureWorksLt2019Context db, int id)
         {
             Customer customer = db.Customers.FirstOrDefault(c => c.CustomerId == id);
+
+            if (customer == null)
+            {
+                return Results.NotFound($"Customer of id {id} was not found");
+            }
+
+            List<CustomerAddress> customerAddresses = db.CustomerAddresses
+                .Where(ca => ca.CustomerId == id)
+                .ToList();
+
+            db.CustomerAddresses.RemoveRange(customerAddresses);
             db.Customers.Remove(customer);
             db.SaveChanges();
-            return Results.Ok();
+            return Results.Ok($"Customer of id {id}, and all address records was deleted");
 
         }
 
@@ -58,11 +65,11 @@ namespace AdventureworksAPI.Methods
             Customer UpdatedCustomer = db.Customers.FirstOrDefault(c => c.CustomerId == id);
             if (UpdatedCustomer == null)
             {
-
                 db.Add(customer);
                 db.SaveChanges();
+
+                return Results.Created($"/customer/update", customer);
             }
-            UpdatedCustomer.CustomerId = customer.CustomerId;
             UpdatedCustomer.EmailAddress = customer.EmailAddress;
             UpdatedCustomer.FirstName = customer.FirstName;
             UpdatedCustomer.LastName = customer.LastName;
@@ -70,8 +77,7 @@ namespace AdventureworksAPI.Methods
             UpdatedCustomer.MiddleName = customer.MiddleName;
             UpdatedCustomer.NameStyle = customer.NameStyle;
             UpdatedCustomer.CompanyName = customer.CompanyName;
-            UpdatedCustomer.ModifiedDate = customer.ModifiedDate;
-            UpdatedCustomer.Rowguid = customer.Rowguid;
+            UpdatedCustomer.ModifiedDate = DateTime.Now;
             UpdatedCustomer.Phone = customer.Phone;
             UpdatedCustomer.Suffix = customer.Suffix;
             UpdatedCustomer.SalesPerson = customer.SalesPerson;
@@ -79,7 +85,7 @@ namespace AdventureworksAPI.Methods
             UpdatedCustomer.PasswordHash = customer.PasswordHash;
 
             db.SaveChanges();
-            return Results.Ok(UpdateCustomer);
+            return Results.Ok(UpdatedCustomer);
         }
 
 
