@@ -49,7 +49,6 @@ namespace AdventureworksAPI.Methods
                 return Results.Created($"/product/update", product);
             };
 
-            selectedProduct.ProductId = product.ProductId;
             selectedProduct.Name = product.Name;
             selectedProduct.ProductNumber = product.ProductNumber;
             selectedProduct.Color = product.Color;
@@ -64,8 +63,7 @@ namespace AdventureworksAPI.Methods
             selectedProduct.DiscontinuedDate = product.DiscontinuedDate;
             selectedProduct.ThumbNailPhoto = product.ThumbNailPhoto;
             selectedProduct.ThumbnailPhotoFileName = product.ThumbnailPhotoFileName;
-            selectedProduct.Rowguid = product.Rowguid;
-            selectedProduct.ModifiedDate = product.ModifiedDate;
+            selectedProduct.ModifiedDate = DateTime.Now;
             selectedProduct.ProductCategory = product.ProductCategory;
             selectedProduct.ProductModel = product.ProductModel;
 

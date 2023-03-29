@@ -31,9 +31,9 @@ app.MapDelete("/salesorder/delete/{salesorderId:int}", SalesOrderHeaderMethods.D
 app.MapPost("/Customer/create",CustomerMethods.CreateCustomer );
 app.MapGet("/Customer/GetCustomerWithId", CustomerMethods.GetCustomerwithId);
 app.MapGet("/Customer", CustomerMethods.GetAllCustomers);
-app.MapDelete("/Customer/Delete", CustomerMethods.DeleteCustomer);
-app.MapPut("Customer/Update", CustomerMethods.UpdateCustomer);
-app.MapGet("Customer/Details", CustomerMethods.CustomerDetails);
+app.MapDelete("/Customer/Delete/{id:int}", CustomerMethods.DeleteCustomer);
+app.MapPut("Customer/Update/{id:int}", CustomerMethods.UpdateCustomer);
+app.MapGet("Customer/Details/{id:int}", CustomerMethods.CustomerDetails);
 app.MapPost("/Customer/AddtoAddress", CustomerMethods.AddCustomerToAddress);
 
 // *** ADDRESS ENDPOINTS ***
