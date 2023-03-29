@@ -12,6 +12,20 @@ builder.Services.AddDbContext<AdventureWorksLt2019Context>(options =>
 
 var app = builder.Build();
 
+// *** PRODUCT ENDPOINTS ***
+app.MapGet("/product", ProductMethods.GetProduct);
+app.MapGet("/product/{productId:int}", ProductMethods.GetProductById);
+app.MapPost("/product/create", ProductMethods.Create);
+app.MapPut("/product/update/{productId:int}", ProductMethods.Update);
+app.MapDelete("/product/delete/{productId:int}", ProductMethods.Delete);
+
+// *** SALES ORDER HEADER ENDPOINTS ***
+app.MapGet("/salesorder", SalesOrderHeaderMethods.GetSalesOrder);
+app.MapGet("/salesorder/{salesorderId:int}", SalesOrderHeaderMethods.GetSalesOrderById);
+app.MapPost("/salesorder/create", SalesOrderHeaderMethods.Create);
+app.MapPut("/salesorder/update/{salesorderId:int}", SalesOrderHeaderMethods.Update);
+app.MapDelete("/salesorder/delete/{salesorderId:int}", SalesOrderHeaderMethods.Delete);
+
 //***Customer Endpoints***
 app.MapPost("/Customer/create",CustomerMethods.CreateCustomer );
 app.MapGet("/Customer/GetCustomerWithId", CustomerMethods.GetCustomerwithId);
@@ -26,6 +40,5 @@ app.MapPost("/address/create", AddressMethods.CreateAddress);
 app.MapPut("/address/update/{id:int}", AddressMethods.UpdateAddress);
 app.MapDelete("/address/delete/{id:int}", AddressMethods.DeleteAddress);
 app.MapGet("/address/details/{id:int}", AddressMethods.AddressDetails);
-
 
 app.Run();
