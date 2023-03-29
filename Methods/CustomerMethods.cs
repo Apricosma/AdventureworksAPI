@@ -55,7 +55,7 @@ namespace AdventureworksAPI.Methods
             db.CustomerAddresses.RemoveRange(customerAddresses);
             db.Customers.Remove(customer);
             db.SaveChanges();
-            return Results.Ok();
+            return Results.Ok($"Customer of id {id}, and all address records was deleted");
 
         }
 
