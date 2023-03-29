@@ -5,6 +5,9 @@ using System.Net;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Reflection.Metadata.Ecma335;
+using Microsoft.AspNetCore.Mvc;
+
+
 
 namespace AdventureworksAPI.Methods
 {
@@ -79,6 +82,7 @@ namespace AdventureworksAPI.Methods
             return Results.Ok(UpdateCustomer);
         }
 
+
         public static IResult CustomerDetails(AdventureWorksLt2019Context db, int id)
         {
             List<Customer> customer = db.Customers.Where(c => c.CustomerId == id)
@@ -97,8 +101,7 @@ namespace AdventureworksAPI.Methods
                 MaxDepth = 0
             };
 
-            // serialize and deserialize with reference handler
-            // only solution I found to prevent a depth error
+        
             string jsonResult = JsonSerializer.Serialize(customer, options);
             Object jsonObject = JsonSerializer.Deserialize<object>(jsonResult);
 
@@ -138,5 +141,41 @@ namespace AdventureworksAPI.Methods
             return Results.Ok($"Customer with id {CustomerID} and Address with id {AddressId} is already living on this Address");
         }
 
+
+        public static IResult AddCustomerToAddress(AdventureWorksLt2019Context db, JsonElement json)
+        {
+            int customerId = json.GetProperty("customerId").GetInt32();
+            int addressId = json.GetProperty("addressId").GetInt32();
+
+            Customer selectedCustomer = db.Customers.FirstOrDefault(c => c.CustomerId == customerId);
+            Address address = db.Addresses.FirstOrDefault(a => a.AddressId == addressId);
+
+            if (selectedCustomer == null)
+            {
+                return Results.NotFound($"Customer of {customerId} was not found");
+            }
+
+            if (address == null) 
+            {
+                return Results.NotFound($"Address of {addressId} was not found");
+            }
+
+            if (db.CustomerAddresses.Any(ca => ca.CustomerId == customerId && ca.AddressId == addressId))
+            {
+                return Results.BadRequest($"ERROR: customerId: {customerId} already on address {addressId}");
+            }
+
+            CustomerAddress customerAddress = new CustomerAddress();
+            customerAddress.CustomerId = selectedCustomer.CustomerId;
+            customerAddress.AddressId = address.AddressId;
+            customerAddress.AddressType = "Main Office";
+            customerAddress.Rowguid = Guid.NewGuid();
+            customerAddress.ModifiedDate = DateTime.Now;
+
+            db.CustomerAddresses.Add(customerAddress);
+            db.SaveChanges();
+
+            return Results.Ok($"Customer {selectedCustomer.FirstName} added to address {address.AddressLine1}");
+        }
     }
 }

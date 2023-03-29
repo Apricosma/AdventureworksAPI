@@ -18,6 +18,7 @@ app.MapGet("/product/{productId:int}", ProductMethods.GetProductById);
 app.MapPost("/product/create", ProductMethods.Create);
 app.MapPut("/product/update/{productId:int}", ProductMethods.Update);
 app.MapDelete("/product/delete/{productId:int}", ProductMethods.Delete);
+app.MapGet("/product/details/{productId:int}", ProductMethods.Details);
 
 // *** SALES ORDER HEADER ENDPOINTS ***
 app.MapGet("/salesorder", SalesOrderHeaderMethods.GetSalesOrder);
@@ -34,6 +35,7 @@ app.MapDelete("/Customer/Delete", CustomerMethods.DeleteCustomer);
 app.MapPut("Customer/Update", CustomerMethods.UpdateCustomer);
 app.MapGet("Customer/Details", CustomerMethods.CustomerDetails);
 app.MapPost("Customer/AddtoAddress", CustomerMethods.AddingCustomer);
+app.MapPost("/Customer/AddtoAddress", CustomerMethods.AddCustomerToAddress);
 
 // *** ADDRESS ENDPOINTS ***
 app.MapGet("/address", AddressMethods.GetAddresses);
