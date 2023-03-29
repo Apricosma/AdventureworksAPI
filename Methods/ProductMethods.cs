@@ -89,7 +89,32 @@ namespace AdventureworksAPI.Methods
             return Results.Ok($"Product {product.Name} was deleted successfully");
         }
 
-        
+        public static IResult Details(AdventureWorksLt2019Context db, int productId) 
+        {
+            List<Product> products = db.Products
+                .Where(p => p.ProductId ==  productId)
+                .Include(pc => pc.ProductCategory)
+                .Include(m => m.ProductModel)
+                .ThenInclude(pm => pm.ProductModelProductDescriptions)
+                .ThenInclude(c => c.ProductDescription)
+                .ToList();
+
+            if (products.Count == 0)
+            {
+                return Results.NotFound($"Product with ID {productId} not found");
+            }
+
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve,
+                MaxDepth = 0
+            };
+
+            string jsonResult = JsonSerializer.Serialize(products, options);
+            Object jsonObject = JsonSerializer.Deserialize<object>(jsonResult);
+
+            return Results.Ok(jsonObject);
+        }
 
     }
 }

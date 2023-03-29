@@ -18,6 +18,7 @@ app.MapGet("/product/{productId:int}", ProductMethods.GetProductById);
 app.MapPost("/product/create", ProductMethods.Create);
 app.MapPut("/product/update/{productId:int}", ProductMethods.Update);
 app.MapDelete("/product/delete/{productId:int}", ProductMethods.Delete);
+app.MapGet("/product/details/{productId:int}", ProductMethods.Details);
 
 // *** SALES ORDER HEADER ENDPOINTS ***
 app.MapGet("/salesorder", SalesOrderHeaderMethods.GetSalesOrder);
