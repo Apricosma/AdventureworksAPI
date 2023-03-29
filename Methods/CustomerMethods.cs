@@ -1,4 +1,6 @@
 ﻿using AdventureworksAPI.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace AdventureworksAPI.Methods
 {
@@ -73,5 +75,40 @@ namespace AdventureworksAPI.Methods
             return Results.Ok(UpdateCustomer);
         }
 
+        public static IResult AddCustomerToAddress(AdventureWorksLt2019Context db, JsonElement json)
+        {
+            int customerId = json.GetProperty("customerId").GetInt32();
+            int addressId = json.GetProperty("addressId").GetInt32();
+
+            Customer selectedCustomer = db.Customers.FirstOrDefault(c => c.CustomerId == customerId);
+            Address address = db.Addresses.FirstOrDefault(a => a.AddressId == addressId);
+
+            if (selectedCustomer == null)
+            {
+                return Results.NotFound($"Customer of {customerId} was not found");
+            }
+
+            if (address == null) 
+            {
+                return Results.NotFound($"Address of {addressId} was not found");
+            }
+
+            if (db.CustomerAddresses.Any(ca => ca.CustomerId == customerId && ca.AddressId == addressId))
+            {
+                return Results.BadRequest($"ERROR: customerId: {customerId} already on address {addressId}");
+            }
+
+            CustomerAddress customerAddress = new CustomerAddress();
+            customerAddress.CustomerId = selectedCustomer.CustomerId;
+            customerAddress.AddressId = address.AddressId;
+            customerAddress.AddressType = "Main Office";
+            customerAddress.Rowguid = Guid.NewGuid();
+            customerAddress.ModifiedDate = DateTime.Now;
+
+            db.CustomerAddresses.Add(customerAddress);
+            db.SaveChanges();
+
+            return Results.Ok($"Customer {selectedCustomer.FirstName} added to address {address.AddressLine1}");
+        }
     }
 }
