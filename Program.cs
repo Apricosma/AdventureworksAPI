@@ -33,6 +33,8 @@ app.MapGet("/Customer/GetCustomerWithId", CustomerMethods.GetCustomerwithId);
 app.MapGet("/Customer", CustomerMethods.GetAllCustomers);
 app.MapDelete("/Customer/Delete", CustomerMethods.DeleteCustomer);
 app.MapPut("Customer/Update", CustomerMethods.UpdateCustomer);
+app.MapGet("Customer/Details", CustomerMethods.CustomerDetails);
+app.MapPost("Customer/AddtoAddress", CustomerMethods.AddingCustomer);
 app.MapPost("/Customer/AddtoAddress", CustomerMethods.AddCustomerToAddress);
 
 // *** ADDRESS ENDPOINTS ***
