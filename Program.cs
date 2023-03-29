@@ -1,6 +1,8 @@
 using AdventureworksAPI.Methods;
 using AdventureworksAPI.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
@@ -23,5 +25,20 @@ app.MapGet("/salesorder/{salesorderId:int}", SalesOrderHeaderMethods.GetSalesOrd
 app.MapPost("/salesorder/create", SalesOrderHeaderMethods.Create);
 app.MapPut("/salesorder/update/{salesorderId:int}", SalesOrderHeaderMethods.Update);
 app.MapDelete("/salesorder/delete/{salesorderId:int}", SalesOrderHeaderMethods.Delete);
+
+//***Customer Endpoints***
+app.MapPost("/Customer/create",CustomerMethods.CreateCustomer );
+app.MapGet("/Customer/GetCustomerWithId", CustomerMethods.GetCustomerwithId);
+app.MapGet("/Customer", CustomerMethods.GetAllCustomers);
+app.MapDelete("/Customer/Delete", CustomerMethods.DeleteCustomer);
+app.MapPut("Customer/Update", CustomerMethods.UpdateCustomer);
+
+// *** ADDRESS ENDPOINTS ***
+app.MapGet("/address", AddressMethods.GetAddresses);
+app.MapGet("/address/{id:int}", AddressMethods.GetAddressById);
+app.MapPost("/address/create", AddressMethods.CreateAddress);
+app.MapPut("/address/update/{id:int}", AddressMethods.UpdateAddress);
+app.MapDelete("/address/delete/{id:int}", AddressMethods.DeleteAddress);
+app.MapGet("/address/details/{id:int}", AddressMethods.AddressDetails);
 
 app.Run();
